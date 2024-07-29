@@ -60,7 +60,7 @@ plugins:
         sed -i 's/0.0.0/${nextRelease.version}/g' src/index.php
       publishCmd: |
         mkdir -p build
-        zip -r build/${GITHUB_REPOSITORY##*/}-${nextRelease.version}.zip src/ -x '*.git*' -x '*.zip'
+        zip -r build/${GITHUB_REPOSITORY##*/}-${nextRelease.version}.zip . -x '*.git*' -x '*.zip'
   - - "@semantic-release/git"
     - assets:
         - CHANGELOG.md
