@@ -1,0 +1,71 @@
+branches:
+  - name: main
+    prerelease: false
+  - name: next
+    prerelease: true
+  - name: beta
+    prerelease: true
+  - name: alpha
+    prerelease: true
+preset: conventionalcommits
+presetConfig:
+  header: Changelog
+  types:
+    - type: feat
+      section: Added
+    - type: fix
+      section: Fixed
+    - type: chore
+      hidden: true
+    - type: docs
+      section: Changed
+    - type: style
+      hidden: true
+    - type: refactor
+      section: Changed
+    - type: perf
+      section: Changed
+# the double-dash here is important. Plugins
+# that define settings are just like this.
+plugins:
+  - - "@semantic-release/commit-analyzer":
+    - releaseRules:
+        - type: docs
+          release: patch
+        - type: chore
+          release: patch
+        - type: refactor
+          release: patch
+        - type: style
+          release: patch
+        - type: test
+          release: patch
+        - type: feat
+          release: minor
+        - type: fix
+          release: patch
+        - scope: no-release
+          release: false
+  - "@semantic-release/release-notes-generator"
+  - - "@semantic-release/changelog"
+    - changelogFile: CHANGELOG.md
+      changelogTitle: |-
+        # Changelog
+
+        All notable changes to this project will be documented in this file.
+
+        The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+  - - "@semantic-release/exec"
+    - prepareCmd: |
+        sed -i 's/0.0.0/${nextRelease.version}/g' src/index.php
+      publishCmd: |
+        mkdir -p build
+        zip -r build/${GITHUB_REPOSITORY##*/}-${nextRelease.version}.zip src/ -x '*.git*' -x '*.zip'
+  - - "@semantic-release/git"
+    - assets:
+        - CHANGELOG.md
+      message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+  - - "@semantic-release/github"
+    - assets:
+        - path: build/${GITHUB_REPOSITORY##*/}-${nextRelease.version}.zip
+          name: ${GITHUB_REPOSITORY##*/}-${nextRelease.version}.zip
