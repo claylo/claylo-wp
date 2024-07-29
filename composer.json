@@ -1,0 +1,17 @@
+{
+  "name": "claylo/wp-additions",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Claylo\\Wp\\": "src/"
+    }
+  },
+  "config": {
+    "bin-dir": "bin",
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "prepend-autoloader": false,
+    "classmap-authoritative": true
+  }
+}
